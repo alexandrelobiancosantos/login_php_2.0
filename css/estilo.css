@@ -109,6 +109,7 @@ label {
 .erro-geral {
     background: #c82a2a;
     color: white;
+    text-align: center;
     font-weight: bold;
     padding: 20px;
     border-radius: 5px;

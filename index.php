@@ -13,15 +13,21 @@ if(isset($_POST['email']) && isset($_POST['senha']) && !empty($_POST['email']) &
     //RECEBER DADOS DO BANCO COMO MATRIZ ASSOCIATIVA CHAVE:COLUNA
     $usuario=$sql->fetch(PDO::FETCH_ASSOC);
     if($usuario){//SE EXISTE USUARIO:
-        //CRIA TOKEN
-        $token=sha1(uniqid().date('d-m-Y-H-i-s'));
-        //ATUALIZA O TOKEN DO USUARIO NO BANCO - não estava acontecendo, pois o banco não aceitava UPDATE
-        $sql=$pdo->prepare("UPDATE usuarios SET token=? WHERE email=? AND senha=?");
-        if($sql->execute(array($token,$email,$senha_cript))){//SE O BANCO FOR ATUALIZADO
-            //ARMAZENA O TOKEN NA SESSÃO (SESSION)
-            $_SESSION['TOKEN']=$token;
-            header('location: restrita.php');
+        //VERIFICAR SE O CADATRO FOI CONFIRMADO
+        if($usuario['status']=='confirmado'){//SE O STATUS É CONFIRMADO:
+            //CRIA TOKEN
+            $token=sha1(uniqid().date('d-m-Y-H-i-s'));
+            //ATUALIZA O TOKEN DO USUARIO NO BANCO - não estava acontecendo, pois o banco não aceitava UPDATE
+            $sql=$pdo->prepare("UPDATE usuarios SET token=? WHERE email=? AND senha=?");
+            if($sql->execute(array($token,$email,$senha_cript))){//SE O BANCO FOR ATUALIZADO
+                //ARMAZENA O TOKEN NA SESSÃO (SESSION)
+                $_SESSION['TOKEN']=$token;
+                header('location: restrita.php');
+            }
+        }else{// SE O STATUS É NOVO:
+            $erro_login = "Por favor, confirme seu cadastro no seu e-mail.";
         }
+
     }else{//SE NÃO EXISTE USUARIO:
         $erro_login = "Usuário ou senha incorretos!";
     }
