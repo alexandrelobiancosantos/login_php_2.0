@@ -1,15 +1,24 @@
 <?php
-/* DOIS MODOS POSSÍVEIS -> local, producao*/
-$modo = 'local'; 
+session_start();
 
-if($modo == 'local'){
+/* DOIS MODOS POSSÍVEIS -> local, producao*/
+$modo = 'desenvolvimento'; 
+
+if($modo == 'desenvolvimento'){
     $servidor ="localhost";
     $usuario = "root";
     $senha = "GuaraGuarana";
     $banco = "login_php";
 }
 
-if($modo =='producao'){
+if($modo =='on_premisse'){
+    $servidor ="";
+    $usuario = "";
+    $senha = "";
+    $banco = "";
+}
+
+if($modo =='aws'){
     $servidor ="";
     $usuario = "";
     $senha = "";
@@ -29,4 +38,21 @@ function limparPost($dados){
     $dados = stripslashes($dados);
     $dados = htmlspecialchars($dados);
     return $dados;
+}
+
+//FUNÇÃO DE AUTORIZAÇÃO DE PAGINA RESTRITA
+function auth($token_session){
+    //RECEVBENDO PDO COMO VARIAVEL GLOBA
+    global $pdo;
+    //VERIFICAR SE TEM AUTORIZAÇÃO
+    $sql = $pdo->prepare("SELECT * FROM usuarios WHERE token=? LIMIT 1");
+    $sql->execute(array($token_session));
+    $usuario = $sql->fetch(PDO::FETCH_ASSOC);
+    // SE NÃO NCONTRAR USUARIO
+    if(!$usuario){//REDIRECIONA PARA O LOGIN
+        //header('location:index.php');
+        return false;
+    }else{//SE O USUARIO EXISTE ACESSA PAGINA RESTRITA
+        return $usuario;
+    }
 }
