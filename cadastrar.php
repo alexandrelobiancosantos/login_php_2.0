@@ -52,7 +52,7 @@ if(isset($_POST['nome_completo']) && isset($_POST['email']) && isset($_POST['sen
                 $status = "novo";
                 $data_cadastro = date('d/m/Y');
                 $sql = $pdo->prepare("INSERT INTO usuarios VALUES (null,?,?,?,?,?,?,?)");
-                if($sql->execute(array($nome,$email,$senha_cript,$recupera_senha,$token,$status, $data_cadastro))){
+                if($sql->execute(array($nome,$email,$senha_cript,$recupera_senha,$token,$status,$data_cadastro))){
                     if($modo == 'desenvolvimento'){//SE O MOD DE OPERÇÃO É DESENVOLVIMENTO REDIRECIONA PARA 
                         header('location: index.php?result=ok');
                     }else{//SE ESTIVER NO MODO DE PRODUÇÃO É NECESSARIO ENVIO DE E-MAIL
