@@ -1,6 +1,14 @@
 <?php
 session_start();
 
+//PHPMailer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'phpmailer/src/Exception.php';
+require 'phpmailer/src/PHPMailer.php';
+require 'phpmailer/src/SMTP.php';
+
 /* DOIS MODOS POSSÍVEIS -> local, producao*/
 $modo = 'desenvolvimento'; 
 
@@ -11,7 +19,7 @@ if($modo == 'desenvolvimento'){
     $banco = "login_php";
 }
 
-if($modo =='on_premisse'){
+if($modo =='producao'){
     $servidor ="";
     $usuario = "";
     $senha = "";
@@ -56,3 +64,4 @@ function auth($token_session){
         return $usuario;
     }
 }
+

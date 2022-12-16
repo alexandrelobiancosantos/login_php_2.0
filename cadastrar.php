@@ -49,14 +49,40 @@ if(isset($_POST['nome_completo']) && isset($_POST['email']) && isset($_POST['sen
             if(!$usuario){
                 $recupera_senha="";
                 $token="";
+                $cod_conf  =uniqid();
                 $status = "novo";
                 $data_cadastro = date('d/m/Y');
-                $sql = $pdo->prepare("INSERT INTO usuarios VALUES (null,?,?,?,?,?,?,?)");
-                if($sql->execute(array($nome,$email,$senha_cript,$recupera_senha,$token,$status,$data_cadastro))){
-                    if($modo == 'desenvolvimento'){//SE O MOD DE OPERÇÃO É DESENVOLVIMENTO REDIRECIONA PARA 
+                $sql = $pdo->prepare("INSERT INTO usuarios VALUES (null,?,?,?,?,?,?,?,?)");
+                if($sql->execute(array($nome,$email,$senha_cript,$recupera_senha,$token,$cod_conf,$status,$data_cadastro))){
+                    if($modo == "desenvolvimento"){//SE O MOD DE OPERÇÃO É DESENVOLVIMENTO REDIRECIONA PARA 
                         header('location: index.php?result=ok');
-                    }else{//SE ESTIVER NO MODO DE PRODUÇÃO É NECESSARIO ENVIO DE E-MAIL
+                    }
+                    if($modo == "producao"){//SE ESTIVER NO MODO DE PRODUÇÃO É NECESSARIO ENVIO DE E-MAIL
+                        //ENVIA EMAIL PARA O USUARIO
+                        $mail = new PHPMailer(true);
+                        try{
+                        //Recipients
+                        $mail->setFrom('from@example.com', 'LoginPHP'); //email do sistema de cadatro
+                        $mail->addAddress($email, $nome);     //Add a recipient
+                        //$mail->addAddress('ellen@example.com');               //Name is optional
+                        //$mail->addReplyTo('info@example.com', 'Information');
+                        //$mail->addCC('cc@example.com');
+                        //$mail->addBCC('bcc@example.com');
 
+                        //Content
+                        $mail->isHTML(true);                                  //Set email format to HTML
+                        $mail->Subject = 'Bem vindo ao sistema de login em php';
+                        //CRIANDO BOTÃO COM LINK DE CONFIRMAÇÃO
+                        $mail->Body    = '<h1>Por favor confirme seu e-mail abaixo: </h1><br><br><a style="background:green; color:white; border-radius:5px; text-decoration:none; padding: 20px;" href="https://meusistema/confirmacao.php?cod_conf='.$cod_conf.'"> Confirmar E-mail</a>';
+
+                        //ENVIO DE EMAIL
+                        $mail->send();
+                        header('location: obrigado.php');
+
+
+                        }catch (Exception $e) {
+                            echo "Erro ao enviar e-mail de confirmação: {$mail->ErrorInfo}";
+                        }
                     }
                 }
             }else{
@@ -79,10 +105,7 @@ if(isset($_POST['nome_completo']) && isset($_POST['email']) && isset($_POST['sen
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/estilo.css" rel="stylesheet">
-    <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-  />
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <title>Cadastrar</title>
 </head>
 <body>
