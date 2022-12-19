@@ -20,10 +20,10 @@ if($modo == 'desenvolvimento'){
 }
 
 if($modo =='producao'){
-    $servidor ="localhost";
-    $usuario = "root";
+    $servidor ="lab-app.c8fkx4hldboz.us-east-1.rds.amazonaws.com";
+    $usuario = "rpifs";
     $senha = "GuaraGuarana";
-    $banco = "login_php";
+    $banco = "rpifs";
 }
 
 if($modo =='aws'){
