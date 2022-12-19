@@ -20,10 +20,10 @@ if($modo == 'desenvolvimento'){
 }
 
 if($modo =='producao'){
-    $servidor ="";
-    $usuario = "";
-    $senha = "";
-    $banco = "";
+    $servidor ="localhost";
+    $usuario = "root";
+    $senha = "GuaraGuarana";
+    $banco = "login_php";
 }
 
 if($modo =='aws'){
